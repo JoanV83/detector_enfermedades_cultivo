@@ -1,0 +1,20 @@
+torch>=2.2.0
+torchvision>=0.17.0
+transformers>=4.43.0
+datasets>=2.19.0
+evaluate>=0.4.0
+scikit-learn>=1.4.0
+numpy>=1.26.0
+pandas>=2.2.0
+pyyaml>=6.0.1
+tqdm>=4.66.0
+matplotlib>=3.8.0
+onnx>=1.16.0
+onnxruntime>=1.18.0; platform_system != 'Darwin'
+streamlit>=1.36.0
+
+# Dev
+pytest>=8.0.0
+black>=24.0.0
+ruff>=0.6.0
+mypy>=1.10.0

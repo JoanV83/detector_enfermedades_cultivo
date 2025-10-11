@@ -1,0 +1,59 @@
+# =========================
+# Entornos / variables
+# =========================
+.venv/
+.env
+*.env
+
+# =========================
+# Caches y bytecode
+# =========================
+__pycache__/
+*.pyc
+.cache/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# =========================
+# Artefactos de build/paquete
+# =========================
+*.egg-info/
+src/*.egg-info/
+dist/
+build/
+
+# =========================
+# Datos y salidas grandes
+# =========================
+data/
+runs/
+checkpoints/
+artifacts/
+notebooks/*.ckpt
+notebooks/*.pt
+notebooks/*.bin
+*.onnx
+*.pt
+*.bin
+
+# =========================
+# Hugging Face / Torch caches (si aparecen dentro del repo)
+# (normalmente están en el HOME, pero por si acaso)
+# =========================
+.hf_cache/
+.huggingface/
+.torch/
+
+# =========================
+# Config/secretos de apps
+# =========================
+.streamlit/secrets.toml
+
+# =========================
+# OS / IDE
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

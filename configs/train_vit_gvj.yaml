@@ -1,0 +1,33 @@
+experiment: "vit_plantvillage_gvj"
+
+dataset:
+  kind: hf
+  hf_path: "GVJahnavi/PlantVillage_dataset"
+  image_column: "image"
+  label_column: "label"
+  train_split: "train"
+  val_split: "validation"     # si el dataset no trae validation, el código separa 10% del train como fallback
+  test_split: "test"          # si no existe, se ignora
+  cache_dir: ".cache/hf"
+
+model:
+  id: "google/vit-base-patch16-224-in21k"
+  image_size: 224
+
+train:
+  batch_size: 8
+  num_workers: 0              # en Windows evita problemas con DataLoader
+  epochs: 2                   # corto para probar rápido
+  lr: 5e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.0
+  gradient_accumulation_steps: 1
+  max_train_samples: 1000     # recorta para acelerar; luego súbelo/elimínalo
+  max_eval_samples: 500
+  seed: 42
+
+paths:
+  output_dir: "runs/vit-gvj"
+  checkpoint_dir: "checkpoints/vit-gvj"
+  log_every: 50
+  save_every: 1
