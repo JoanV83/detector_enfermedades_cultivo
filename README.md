@@ -1,110 +1,143 @@
-# Plant Disease Detection (ViT + UV)
+# Plant Disease Detection (ViT)
 
-Clasificador de enfermedades en cultivos usando **Vision Transformer (ViT)** y el
-dataset **PlantVillage** (división oficial `train/validation/test` del repo
-`GVJahnavi/PlantVillage_dataset`). Incluye entrenamiento, inferencia por CLI,
-app de **Streamlit**, exportación a **ONNX/TorchScript** y **tests** con `pytest`.
+Clasificador de enfermedades en cultivos basado en **Vision Transformer (ViT)**
+entrenado con el conjunto **PlantVillage** (`GVJahnavi/PlantVillage_dataset`).
+Incluye entrenamiento configurable, inferencia por CLI y **Streamlit**, exportación
+(ONNX/TorchScript) y una batería mínima de pruebas con **pytest**.
+
+---
+
+## Contenidos
+
+- [Características](#características)
+- [Requisitos](#requisitos)
+- [Instalación](#instalación)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Dataset](#dataset)
+- [Entrenamiento](#entrenamiento)
+- [Inferencia por CLI](#inferencia-por-cli)
+- [Aplicación Streamlit](#aplicación-streamlit)
+- [Exportación de modelos](#exportación-de-modelos)
+- [Pruebas](#pruebas)
+- [Calidad de código](#calidad-de-código)
+- [Notas y solución de problemas](#notas-y-solución-de-problemas)
+- [Licencia](#licencia)
+
+---
 
 ## Características
 
-- Código estilo **PEP 8**, con **docstrings** y tipado.
-- Estructura limpia en `src/` (cohesión y bajo acoplamiento).
-- Entrenamiento configurable por **YAML** en `configs/`.
-- Inferencia por **CLI** y **Streamlit** (`src/plant_disease/apps/streamlit_app.py`).
-- Exportadores a **ONNX** y **TorchScript** en `scripts/`.
-- **pytest** listo (`tests/`) y herramientas de calidad: **ruff**, **black**.
+- Entrenamiento controlado por **YAML** (ruta de salida, epochs, LR, etc.).
+- Carga robusta del dataset desde Hugging Face con normalización de columnas.
+- Inferencia en:
+  - **CLI** con `predict.py`.
+  - **Streamlit** en `src/plant_disease/apps/streamlit_app.py`.
+- Exportación a **ONNX** y **TorchScript** (scripts en `scripts/`).
+- Suite básica de **pytest** y herramientas de estilo (`ruff`, `black`).
 
 ---
 
 ## Requisitos
 
-- **Python 3.10+**
-- **[uv](https://docs.astral.sh/uv/)** (gestor rápido de entornos)
-- GPU opcional (CUDA) para acelerar entrenamiento. En CPU también funciona.
+- Python **3.10+**
+- Opcional: GPU CUDA para acelerar el entrenamiento.
+- Gestor de entornos recomendado: **[uv](https://docs.astral.sh/uv/)**.
+
+Las versiones de dependencias se declaran en `pyproject.toml` y se reflejan
+también en `requirements.txt`.
 
 ---
 
-## Instalación (con `uv`)
+## Instalación
 
-### Windows (PowerShell)
+### Opción A · uv (recomendada)
+
+**Windows (PowerShell)**
+
 ```powershell
-# 1) Crear y activar entorno
 uv venv
 .\.venv\Scripts\Activate.ps1
 
-# 2) Instalar el paquete en modo editable
 $env:UV_LINK_MODE = "copy"
-uv pip install -e .
-
-# (opcional) herramientas de estilo
-uv pip install -e ".[dev]"
+uv pip install -e .         # paquete en modo editable
+uv pip install -e ".[dev]"  # opcional: ruff/black/mypy/pytest
 ```
 
-### Linux / macOS
+**Linux/macOS (bash)**
+
 ```bash
 uv venv
 source .venv/bin/activate
+
 uv pip install -e .
-uv pip install -e ".[dev]"   # opcional (ruff/black/mypy/pytest)
+uv pip install -e ".[dev]"  # opcional
 ```
 
-> Todas las dependencias con versiones están en `pyproject.toml` y `requirements.txt`.
+### Opción B · venv + pip estándar
+
+```bash
+python -m venv .venv
+source .venv/bin/activate     # Windows: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
 
 ---
 
 ## Estructura del proyecto
 
-```text
+```
 proyecto_final/
 ├── configs/
-│   └── train_vit_gvj.yaml            # ejemplo de config para ViT + PlantVillage
+│   └── train_vit_gvj.yaml
 ├── scripts/
-│   ├── export_onnx.py                # exportación a ONNX
-│   └── export_torchscript.py         # exportación a TorchScript
+│   ├── export_onnx.py
+│   ├── export_torchscript.py
+│   └── save_samples.py
 ├── src/
 │   └── plant_disease/
 │       ├── apps/
-│       │   └── streamlit_app.py      # app Streamlit (UI)
+│       │   └── streamlit_app.py
 │       ├── data/
-│       │   └── datasets.py           # carga normalizada desde Hugging Face
+│       │   └── datasets.py
 │       ├── inference/
-│       │   └── predict.py            # CLI de inferencia por imagen
+│       │   └── predict.py
 │       ├── models/
-│       │   └── vit.py                # wrapper ligero de ViT (opcional, útil en export)
+│       │   └── vit.py
 │       └── training/
-│           └── train.py              # bucle de entrenamiento + validación/test
+│           └── train.py
 ├── tests/
 │   ├── test_collate.py
 │   ├── test_imports.py
-│   ├── test_inference.py
-│   ├── test_datasets_loading.py      # (nuevo sugerido)
-│   └── test_training_config_io.py    # (nuevo sugerido)
-├── runs/                             # artefactos de entrenamiento (salida)
-├── checkpoints/                      # checkpoints (mejor y por época)
-├── artifacts/                        # exportaciones (onnx/ts/…)
-├── notebooks/                        # opcional
-├── pyproject.toml
+│   └── test_inference.py
+├── artifacts/           # onnx/ts (salidas)
+├── checkpoints/         # checkpoints por época + best
+├── runs/                # modelo final (save_pretrained)
 ├── requirements.txt
-├── LICENSE
+├── pyproject.toml
 └── README.md
 ```
-
-> La carpeta `src/plant_disease_uv.egg-info/` la crea la instalación editable; no la edites.
 
 ---
 
 ## Dataset
 
-Se usa `GVJahnavi/PlantVillage_dataset` (Hugging Face). La carga es automática
-desde `datasets` y el módulo `datasets.py` **normaliza** columnas a:
-- `image` (PIL)  
-- `label` (int `ClassLabel` o mapeada a int si venía como texto)
+El proyecto usa **GVJahnavi/PlantVillage_dataset** (Hugging Face). La carga se
+realiza con `datasets.load_dataset` y se normaliza a:
+
+- `image` · imagen PIL
+- `label` · entero (`ClassLabel`) o mapeado desde texto
+
+Para disponer de imágenes de prueba locales puedes ejecutar:
+
+```bash
+python scripts/save_samples.py --out-dir data/test_images --per-class 1
+```
 
 ---
 
 ## Entrenamiento
 
-Ajusta `configs/train_vit_gvj.yaml` según tus recursos. Ejemplo mínimo:
+Revisa y ajusta `configs/train_vit_gvj.yaml`. Ejemplo:
 
 ```yaml
 model:
@@ -124,10 +157,10 @@ train:
   lr: 5e-5
   weight_decay: 0.01
   seed: 42
-  # opcional (entrenamiento rápido)
+  # Entrenamiento rápido:
   # max_train_samples: 4000
   # max_eval_samples: 1000
-  # num_workers: 0   # en Windows suele ser más seguro dejar 0
+  # num_workers: 0  # en Windows suele ser seguro 0
 
 paths:
   output_dir: runs/vit-gvj
@@ -142,107 +175,96 @@ Ejecuta:
 python -m plant_disease.training.train --config configs/train_vit_gvj.yaml
 ```
 
-Salida típica:
-- Mejor checkpoint en `checkpoints/vit-gvj/best/`
-- Checkpoints por época en `checkpoints/vit-gvj/epoch-*/`
-- **Modelo final** en `runs/vit-gvj/final/` (+ `class_names.json`)
+Salidas relevantes:
+
+- Mejor checkpoint: `checkpoints/vit-gvj/best/`
+- Checkpoints por época: `checkpoints/vit-gvj/epoch-*/`
+- Modelo final (HF `save_pretrained`): `runs/vit-gvj/final/`
+  - Incluye `class_names.json`
 
 ---
 
-## Inferencia por línea de comandos
-
-Predicción Top-K (sobre una imagen):
+## Inferencia por CLI
 
 ```bash
-python -m plant_disease.inference.predict --image path/a/tu_imagen.jpg --topk 5
+python -m plant_disease.inference.predict --image path/a/imagen.jpg --topk 5
+# opcional
+# --model_dir runs/vit-gvj/final
 ```
-
-Por defecto usa el directorio `runs/vit-gvj/final`. Puedes cambiarlo con
-`--model_dir`.
 
 ---
 
-## App (Streamlit)
+## Aplicación Streamlit
 
-La app vive en `src/plant_disease/apps/streamlit_app.py`. Lánzala desde la raíz:
+Desde la raíz del repo:
 
 ```bash
 python -m streamlit run src/plant_disease/apps/streamlit_app.py
 ```
 
-En la barra lateral puedes indicar el **directorio del modelo**
-(p. ej. `runs/vit-gvj/final`) y el **Top-K**.  
-Sube una imagen y verás las probabilidades por clase.
-
-> Nota: eliminamos la demo de Gradio para simplificar. Todo queda en Streamlit.
+En la barra lateral se configura el directorio del modelo
+(por defecto `runs/vit-gvj/final`) y el Top-K. Carga una imagen para ver el
+ranking por clase y la clase ganadora.
 
 ---
 
-## Exportar el modelo
+## Exportación de modelos
 
-### ONNX
+**ONNX**
+
 ```bash
 python scripts/export_onnx.py   --checkpoint runs/vit-gvj/final/pytorch_model.bin   --out artifacts/model.onnx   --model_name google/vit-base-patch16-224-in21k   --num_labels 38
 ```
 
-### TorchScript
+**TorchScript**
+
 ```bash
 python scripts/export_torchscript.py   --checkpoint runs/vit-gvj/final/pytorch_model.bin   --out artifacts/model.ts   --model_name google/vit-base-patch16-224-in21k   --num_labels 38
 ```
-
-Ambos scripts usan el wrapper `VitClassifier` de `src/plant_disease/models/vit.py`.
 
 ---
 
 ## Pruebas
 
-Ejecuta todos los tests:
-
 ```bash
 pytest -q
 ```
 
-Incluye pruebas de:
-- **Importación** del paquete (`test_imports.py`).
-- **Collate** de ViT (`test_collate.py`).
-- **Inferencia** con imagen dummy (`test_inference.py`).
-- **Carga de dataset** y mapeo de etiquetas (`test_datasets_loading.py`).
-- **I/O de configuración de entrenamiento** (`test_training_config_io.py`).
-
-> Los tests que requieren un modelo entrenado se **omiten** automáticamente si
-no se encuentra `runs/vit-gvj/final`.
+Los tests que requieren un modelo entrenado se omiten automáticamente si no se
+encuentra `runs/vit-gvj/final`.
 
 ---
 
-## Estilo y calidad (PEP 8)
-
-Formateo y análisis:
+## Calidad de código
 
 ```bash
-ruff check src tests        # linter + import order
-black src tests             # formateo
-mypy src                    # (opcional) chequeo estático de tipos
+ruff check src tests
+black src tests
+# opcional
+mypy src
 ```
-
-Directrices PEP 8 aplicadas:
-- Nombres de funciones/variables en `snake_case`; clases en `CamelCase`.
-- Líneas ≤ 88 caracteres (configurado en `ruff`/`black`).
-- Importaciones agrupadas (estándar / terceros / locales) con líneas en blanco.
-- **Docstrings** en módulos, clases y funciones (triple comilla, propósito claro).
 
 ---
 
-## Consejos y solución de problemas
+## Notas y solución de problemas
 
-- **Windows + PIL + archivos temporales**: evita `NamedTemporaryFile(delete=True)`
-  cuando vayas a escribir con PIL; usa `TemporaryDirectory()` y guarda el archivo
-  dentro (ya está contemplado en los tests).
-- **CPU**: el entrenamiento puede ser lento; usa `max_train_samples`/`max_eval_samples`
-  para iteraciones rápidas.
-- **CUDA**: si está disponible, el entrenamiento usa GPU automáticamente.
+- **Windows + PIL**: evita escribir sobre `NamedTemporaryFile(delete=True)`;
+  usa `TemporaryDirectory()` (reflejado en tests).
+- **Solo CPU**: usa `max_train_samples`/`max_eval_samples` para iteraciones
+  rápidas.
+- **CUDA**: si hay GPU disponible se utilizará automáticamente.
 
 ---
 
 ## Licencia
 
-Este proyecto se distribuye bajo licencia **MIT** (ver `LICENSE`).
+MIT. Consulta el archivo `LICENSE`.
+
+---
+
+## Autores
+
+- **Joan Andres Velasquez** — https://github.com/JoanV83
+- **Edwin Vicente Zapata** — https://github.com/edwinviz
+- **Miguel Saavedra** — https://github.com/mash4403
+- **Andres Velasco** — https://github.com/Andres-Velasco07
