@@ -9,7 +9,7 @@
 
 ---
 
-## 🎯 **OBJETIVOS DEL PROJECT BOARD**
+## **OBJETIVOS DEL PROJECT BOARD**
 
 1. **Seguimiento de progreso** de tareas y sprints
 2. **Gestión de iteraciones** con duraciones flexibles
@@ -19,17 +19,17 @@
 
 ---
 
-## 📊 **ESTRUCTURA DEL BOARD**
+## **ESTRUCTURA DEL BOARD**
 
 ### **Columnas del Project Board:**
 
 | Columna | Descripción | Criterios de Entrada |
 |---------|-------------|---------------------|
-| 📝 **Backlog** | Tareas identificadas pero no planificadas | Issues creados, features propuestos |
-| 🚀 **Sprint Planning** | Tareas seleccionadas para el próximo sprint | Estimadas, priorizadas, asignadas |
-| 🏗️ **In Progress** | Tareas actualmente en desarrollo | Branch creada, trabajo iniciado |
-| 🔍 **In Review** | Tareas completadas esperando revisión | PR abierto, tests pasando |
-| ✅ **Done** | Tareas completadas y aprobadas | PR mergeado, features desplegadas |
+| **Backlog** | Tareas identificadas pero no planificadas | Issues creados, features propuestos |
+| **Sprint Planning** | Tareas seleccionadas para el próximo sprint | Estimadas, priorizadas, asignadas |
+| **In Progress** | Tareas actualmente en desarrollo | Branch creada, trabajo iniciado |
+| **In Review** | Tareas completadas esperando revisión | PR abierto, tests pasando |
+| **Done** | Tareas completadas y aprobadas | PR mergeado, features desplegadas |
 
 ---
 
@@ -92,37 +92,37 @@
 
 ---
 
-## 🏷️ **SISTEMA DE LABELS/TAGS**
+## **SISTEMA DE LABELS/TAGS**
 
 ### **Por Prioridad:**
-- 🔴 **Critical**: Bloquea el desarrollo
-- 🟡 **High**: Importante para el sprint actual  
-- 🟢 **Medium**: Deseable pero no urgente
-- 🔵 **Low**: Mejoras futuras
+-  **Critical**: Bloquea el desarrollo
+- **High**: Importante para el sprint actual  
+- **Medium**: Deseable pero no urgente
+- **Low**: Mejoras futuras
 
 ### **Por Categoría:**
-- 🧠 **model**: Relacionado con el modelo ViT
-- 📊 **data**: Manejo de datos y datasets
-- 🧪 **testing**: Tests y calidad de código
-- 📱 **app**: Aplicación Streamlit
-- 📚 **docs**: Documentación
-- 🏗️ **infrastructure**: Setup y configuración
-- 🐛 **bug**: Errores a corregir
-- ✨ **enhancement**: Mejoras y nuevas features
+- **model**: Relacionado con el modelo ViT
+- **data**: Manejo de datos y datasets
+- **testing**: Tests y calidad de código
+- **app**: Aplicación Streamlit
+- **docs**: Documentación
+- **infrastructure**: Setup y configuración
+- **bug**: Errores a corregir
+- **enhancement**: Mejoras y nuevas features
 
 ### **Por Estado Técnico:**
-- 🔬 **research**: Requiere investigación
-- ⚡ **quick**: Tarea rápida (< 2 horas)
-- 🎯 **ready**: Lista para desarrollo
-- 🚧 **blocked**: Esperando dependencia
+- **research**: Requiere investigación
+- **quick**: Tarea rápida (< 2 horas)
+- **ready**: Lista para desarrollo
+- **blocked**: Esperando dependencia
 
 ---
 
-## 👥 **ASIGNACIÓN DE RESPONSABILIDADES**
+## **ASIGNACIÓN DE RESPONSABILIDADES**
 
 ### **Roles del Equipo:**
-- **J. A. Velásquez Vélez**: Model Architecture & Training
-- **E. V. Zapata Cardona**: Data Pipeline & Preprocessing  
+- **J. A. Velásquez Vélez**: Arquitectura del modelo & Entrenamiento
+- **E. V. Zapata Cardona**:  Pipeline & Procesamiento - Testing & Quality Assurance
 - **M. A. Saavedra Hurtado**: Testing & Quality Assurance
 - **N. A. Velasco Castellanos**: Application & Deployment
 
@@ -133,7 +133,7 @@
 
 ---
 
-## 📈 **MÉTRICAS DE SEGUIMIENTO**
+## **MÉTRICAS DE SEGUIMIENTO**
 
 ### **Velocity Metrics:**
 - **Story Points completados** por sprint
@@ -195,7 +195,7 @@ Para que una tarea se considere "Done", debe cumplir:
 
 ---
 
-## 📋 **TEMPLATES DE ISSUES**
+## **TEMPLATES DE ISSUES**
 
 ### **Feature Request Template:**
 ```markdown
@@ -242,7 +242,7 @@ Para que una tarea se considere "Done", debe cumplir:
 
 ---
 
-## 🚀 **AUTOMATION Y HERRAMIENTAS**
+## **AUTOMATION Y HERRAMIENTAS**
 
 ### **GitHub Actions (CI/CD):**
 - **Test Pipeline**: Ejecuta tests en cada PR
@@ -265,7 +265,7 @@ Para que una tarea se considere "Done", debe cumplir:
 
 ---
 
-## 📊 **REPORTING Y COMUNICACIÓN**
+## **REPORTING Y COMUNICACIÓN**
 
 ### **Sprint Reports:**
 Generados automáticamente cada viernes:
@@ -288,7 +288,7 @@ Generados automáticamente cada viernes:
 
 ---
 
-## 🎯 **OBJETIVOS POR SPRINT**
+## **OBJETIVOS POR SPRINT**
 
 ### **Sprint Actual: [Número/Nombre]**
 **Fechas:** [DD/MM/YYYY - DD/MM/YYYY]  
@@ -308,7 +308,7 @@ Generados automáticamente cada viernes:
 
 ---
 
-## 📚 **RECURSOS Y DOCUMENTACIÓN**
+## **RECURSOS Y DOCUMENTACIÓN**
 
 ### **Enlaces Importantes:**
 - [Repository Main](https://github.com/JoanV83/detector_enfermedades_cultivo)
