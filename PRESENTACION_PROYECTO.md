@@ -25,7 +25,7 @@
 
 ---
 
-## 🎯 **INTRODUCCIÓN Y PROBLEMÁTICA**
+## **INTRODUCCIÓN Y PROBLEMÁTICA**
 
 ### Problemática Identificada
 - Los métodos actuales para detectar enfermedades en cultivos son **costosos** y dependen de **especialistas** y **equipos especializados**
@@ -39,7 +39,7 @@
 
 ---
 
-## 🎯 **OBJETIVOS DEL PROYECTO**
+## **OBJETIVOS DEL PROYECTO**
 
 ### Objetivo General
 Desarrollar un sistema de clasificación de imágenes utilizando el PlantVillage Dataset y un modelo ViT preentrenado para la detección de enfermedades en cultivos.
@@ -53,14 +53,14 @@ Desarrollar un sistema de clasificación de imágenes utilizando el PlantVillage
 
 ---
 
-## 🚀 **METODOLOGÍA ÁGIL APLICADA**
+## **METODOLOGÍA ÁGIL APLICADA**
 
 ### Framework: CRISP-DM Adaptado con Principios Ágiles
 
-#### 🔄 **Iteraciones de 1 Semana**
+#### **Iteraciones de 1 Semana**
 Aplicamos sprints cortos de 1 semana para garantizar entregas incrementales y feedback continuo.
 
-#### 📊 **Fases Implementadas:**
+#### **Fases Implementadas:**
 
 **1. Comprensión del Negocio** *(Sprint 0)*
 - Definición clara de objetivos
@@ -100,11 +100,11 @@ Aplicamos sprints cortos de 1 semana para garantizar entregas incrementales y fe
 **Duración:** Semana 1  
 **Entregables:**
 ```
-✅ Configuración del entorno de desarrollo
-✅ Descarga y análisis del PlantVillage Dataset
-✅ Pipeline de preprocesamiento implementado
-✅ Split estratificado de datos realizado
-✅ Configuración inicial del modelo ViT base
+Configuración del entorno de desarrollo
+Descarga y análisis del PlantVillage Dataset
+Pipeline de preprocesamiento implementado
+Split estratificado de datos realizado
+Configuración inicial del modelo ViT base
 ```
 
 **Evidencias de Metodología Ágil:**
@@ -116,10 +116,10 @@ Aplicamos sprints cortos de 1 semana para garantizar entregas incrementales y fe
 **Duración:** Semana 2  
 **Entregables:**
 ```
-✅ Fine-tuning del modelo ViT implementado
-✅ Técnicas de data augmentation aplicadas
-✅ Sistema de checkpoints y logging
-✅ Pipeline de entrenamiento configurable
+Fine-tuning del modelo ViT implementado
+Técnicas de data augmentation aplicadas
+Sistema de checkpoints y logging
+Pipeline de entrenamiento configurable
 ```
 
 **Código Clave Implementado:**
@@ -136,10 +136,10 @@ def evaluate(model, loader, device):
 **Duración:** Semana 3  
 **Entregables:**
 ```
-✅ Sistema de evaluación con métricas múltiples
-✅ Matriz de confusión implementada
-✅ Análisis de rendimiento por clase
-✅ Pipeline de inferencia optimizado
+Sistema de evaluación con métricas múltiples
+Matriz de confusión implementada
+Análisis de rendimiento por clase
+Pipeline de inferencia optimizado
 ```
 
 **Testing Implementado:**
@@ -157,10 +157,10 @@ tests/
 **Duración:** Semana 4  
 **Entregables:**
 ```
-✅ Exportación a formatos ONNX/TorchScript
-✅ Aplicación Streamlit funcional
-✅ Documentación completa
-✅ Demo interactiva desplegada
+Exportación a formatos ONNX/TorchScript
+Aplicación Streamlit funcional
+Documentación completa
+Demo interactiva desplegada
 ```
 
 ---
@@ -171,17 +171,17 @@ tests/
 ```
 src/plant_disease/
 ├── apps/
-│   └── streamlit_app.py      # 🎨 Frontend (Streamlit UI)
+│   └── streamlit_app.py      # Frontend (Streamlit UI)
 ├── data/
-│   └── datasets.py           # 📊 Carga normalizada desde HF
+│   └── datasets.py           # Carga normalizada desde HF
 ├── evaluation/
-│   └── evaluate.py           # 📈 Evaluación de modelos
+│   └── evaluate.py           # Evaluación de modelos
 ├── inference/
-│   └── predict.py            # 🔍 CLI de inferencia
+│   └── predict.py            # CLI de inferencia
 ├── models/
-│   └── vit.py               # 🧠 Wrapper del modelo ViT
+│   └── vit.py               # Wrapper del modelo ViT
 └── training/
-    └── train.py             # 🏋️ Pipeline de entrenamiento
+    └── train.py             # Pipeline de entrenamiento
 ```
 
 ### **Componentes del Sistema**
@@ -229,10 +229,10 @@ dataset:
 ```
 
 **Características:**
-- ✅ Carga automática desde Hugging Face
-- ✅ Normalización de formato RGB
-- ✅ Redimensionado a 224x224 (requerimiento ViT)
-- ✅ Split estratificado manteniendo proporción de clases
+- Carga automática desde Hugging Face
+- Normalización de formato RGB
+- Redimensionado a 224x224 (requerimiento ViT)
+- Split estratificado manteniendo proporción de clases
 
 ### **2. Model Configuration**
 ```yaml
@@ -248,10 +248,10 @@ train:
 ```
 
 **Características Técnicas:**
-- ✅ Modelo preentrenado en ImageNet-21k
-- ✅ Fine-tuning de capas superiores
-- ✅ Optimizador AdamW con weight decay
-- ✅ Learning rate schedule configurable
+- Modelo preentrenado en ImageNet-21k
+- Fine-tuning de capas superiores
+- Optimizador AdamW con weight decay
+- Learning rate schedule configurable
 
 ### **3. Training Pipeline**
 ```python
@@ -268,10 +268,10 @@ for epoch in range(1, epochs + 1):
 ```
 
 ### **4. Evaluation & Metrics**
-- ✅ **Accuracy**: Precisión general del modelo
-- ✅ **Loss tracking**: Seguimiento de pérdida en train/validation
-- ✅ **Per-class metrics**: Análisis detallado por enfermedad
-- ✅ **Confusion Matrix**: Matriz de confusión para análisis de errores
+- **Accuracy**: Precisión general del modelo
+- **Loss tracking**: Seguimiento de pérdida en train/validation
+- **Per-class metrics**: Análisis detallado por enfermedad
+- **Confusion Matrix**: Matriz de confusión para análisis de errores
 
 ### **5. Model Export & Deployment**
 ```python
@@ -291,12 +291,12 @@ scripts/
 ```bash
 pytest tests/ -v
 ```
-- ✅ `test_imports.py`: Verificación de importaciones
-- ✅ `test_collate.py`: Testing del data collator
-- ✅ `test_datasets.py`: Verificación de carga de datos
-- ✅ `test_inference.py`: Testing de pipeline de inferencia
-- ✅ `test_models_vit.py`: Testing del wrapper del modelo
-- ✅ `test_predict_utils.py`: Testing de utilidades
+- `test_imports.py`: Verificación de importaciones
+- `test_collate.py`: Testing del data collator
+- `test_datasets.py`: Verificación de carga de datos
+- `test_inference.py`: Testing de pipeline de inferencia
+- `test_models_vit.py`: Testing del wrapper del modelo
+- `test_predict_utils.py`: Testing de utilidades
 
 **2. Code Quality**
 ```bash
@@ -307,27 +307,27 @@ mypy src                   # Type checking
 ```
 
 **3. Integration Tests**
-- ✅ Testing end-to-end del pipeline de entrenamiento
-- ✅ Verificación de compatibilidad entre componentes
-- ✅ Testing de la aplicación Streamlit
+- Testing end-to-end del pipeline de entrenamiento
+- Verificación de compatibilidad entre componentes
+- Testing de la aplicación Streamlit
 
 ### **Evidencias de Calidad del Código**
 
 **Documentación:**
-- ✅ Docstrings en todas las funciones
-- ✅ README detallado con instrucciones
-- ✅ Configuración externa en YAML
-- ✅ Type hints en el código
+- Docstrings en todas las funciones
+- README detallado con instrucciones
+- Configuración externa en YAML
+- Type hints en el código
 
 **Estructura:**
-- ✅ Separación clara de responsabilidades
-- ✅ Configuración centralizada
-- ✅ Manejo de errores robusto
-- ✅ Logging estructurado
+- Separación clara de responsabilidades
+- Configuración centralizada
+- Manejo de errores robusto
+- Logging estructurado
 
 ---
 
-## 🚀 **DESPLIEGUE Y DEMO**
+## **DESPLIEGUE Y DEMO**
 
 ### **Aplicación Streamlit**
 
@@ -335,7 +335,7 @@ mypy src                   # Type checking
 ```python
 # src/plant_disease/apps/streamlit_app.py
 st.set_page_config(page_title="Plant Disease Classifier", layout="centered")
-st.title("🌿 Plant Disease Classifier (ViT)")
+st.title("Plant Disease Classifier (ViT)")
 
 # Interface intuitiva
 uploaded = st.file_uploader("Sube una imagen de hoja", type=["jpg", "jpeg", "png"])
@@ -351,12 +351,12 @@ if uploaded:
 ```
 
 **Funcionalidades Implementadas:**
-- ✅ **Upload de imágenes**: Drag & drop interface
-- ✅ **Predicción en tiempo real**: Respuesta inmediata
-- ✅ **Top-K results**: Configurable (1-10)
-- ✅ **Visualización**: Gráficos de barras con probabilidades
-- ✅ **Model switching**: Selección de directorio de modelo
-- ✅ **Caching**: Optimización de carga del modelo
+- **Upload de imágenes**: Drag & drop interface
+- **Predicción en tiempo real**: Respuesta inmediata
+- **Top-K results**: Configurable (1-10)
+- **Visualización**: Gráficos de barras con probabilidades
+- **Model switching**: Selección de directorio de modelo
+- **Caching**: Optimización de carga del modelo
 
 ### **Comandos de Ejecución**
 
@@ -386,113 +386,113 @@ python scripts/export_torchscript.py --checkpoint runs/vit-gvj/final/pytorch_mod
 
 ---
 
-## 📊 **RESULTADOS Y CONCLUSIONES**
+## **RESULTADOS Y CONCLUSIONES**
 
 ### **Logros Técnicos Alcanzados**
 
 **1. Pipeline Completo de ML**
-- ✅ **Data Loading**: Automático desde Hugging Face
-- ✅ **Preprocessing**: Normalización y augmentation
-- ✅ **Training**: Fine-tuning con checkpointing
-- ✅ **Evaluation**: Métricas comprehensivas
-- ✅ **Inference**: CLI y API disponibles
-- ✅ **Deployment**: App web funcional
+- **Data Loading**: Automático desde Hugging Face
+- **Preprocessing**: Normalización y augmentation
+- **Training**: Fine-tuning con checkpointing
+- **Evaluation**: Métricas comprehensivas
+- **Inference**: CLI y API disponibles
+- **Deployment**: App web funcional
 
 **2. Arquitectura Escalable**
-- ✅ **Modularidad**: Componentes independientes y reutilizables
-- ✅ **Configurabilidad**: Parámetros externalizados en YAML
-- ✅ **Extensibilidad**: Fácil agregar nuevos modelos o datasets
-- ✅ **Mantenibilidad**: Código bien documentado y testeado
+- **Modularidad**: Componentes independientes y reutilizables
+- **Configurabilidad**: Parámetros externalizados en YAML
+- **Extensibilidad**: Fácil agregar nuevos modelos o datasets
+- **Mantenibilidad**: Código bien documentado y testeado
 
 **3. Metodología Ágil Aplicada**
-- ✅ **Sprints de 1 semana**: Entregas incrementales
-- ✅ **Testing continuo**: 6 suites de tests automatizados
-- ✅ **Documentación**: README y docstrings completos
-- ✅ **Code quality**: Linting, formateo y type checking
-- ✅ **CI/CD ready**: Estructura preparada para integración continua
+- **Sprints de 1 semana**: Entregas incrementales
+- **Testing continuo**: 6 suites de tests automatizados
+- **Documentación**: README y docstrings completos
+- **Code quality**: Linting, formateo y type checking
+- **CI/CD ready**: Estructura preparada para integración continua
 
 ### **Evidencias de Calidad**
 
 **Estructura del Proyecto:**
 ```
 detector_enfermedades_cultivo/
-├── configs/                 # 📁 Configuraciones externalizadas
-├── scripts/                 # 🔧 Utilidades de exportación
-├── src/plant_disease/       # 💻 Código fuente modular
-├── tests/                   # 🧪 Suite completa de tests
-├── pyproject.toml          # 📦 Gestión de dependencias
-├── requirements.txt        # 📋 Dependencias claras
-└── README.md              # 📚 Documentación completa
+├── configs/                 # Configuraciones externalizadas
+├── scripts/                 # Utilidades de exportación
+├── src/plant_disease/       # Código fuente modular
+├── tests/                   # Suite completa de tests
+├── pyproject.toml          # Gestión de dependencias
+├── requirements.txt        # Dependencias claras
+└── README.md              # Documentación completa
 ```
 
 **Métricas de Calidad del Código:**
-- ✅ **Coverage**: Tests cubren componentes principales
-- ✅ **PEP 8**: Código formateado según estándares
-- ✅ **Type Safety**: Type hints implementados
-- ✅ **Documentation**: 100% de funciones documentadas
-- ✅ **Modularity**: Alto cohesión, bajo acoplamiento
+- **Coverage**: Tests cubren componentes principales
+- **PEP 8**: Código formateado según estándares
+- **Type Safety**: Type hints implementados
+- **Documentation**: 100% de funciones documentadas
+- **Modularity**: Alto cohesión, bajo acoplamiento
 
 ### **Cumplimiento de Objetivos Originales**
 
 | Objetivo Propuesto | Estado | Evidencia |
 |-------------------|---------|-----------|
-| Fine-tuning del ViT | ✅ Logrado | `src/plant_disease/training/train.py` |
-| Data Augmentation | ✅ Logrado | Configuración en `ViTCollator` |
-| Evaluación con métricas | ✅ Logrado | Función `evaluate()` implementada |
-| Export ONNX/TorchScript | ✅ Logrado | Scripts en `scripts/` |
-| Demo interactiva | ✅ Mejorado | Streamlit > Gradio (más moderno) |
+| Fine-tuning del ViT | Logrado | `src/plant_disease/training/train.py` |
+| Data Augmentation | Logrado | Configuración en `ViTCollator` |
+| Evaluación con métricas | Logrado | Función `evaluate()` implementada |
+| Export ONNX/TorchScript | Logrado | Scripts en `scripts/` |
+| Demo interactiva | Mejorado | Streamlit > Gradio (más moderno) |
 
 ### **Valor Agregado del Proyecto**
 
 **1. Accesibilidad**
-- 🌍 **Deployment fácil**: Un comando para ejecutar la demo
-- 📱 **Mobile-ready**: Exportación a formatos optimizados
-- 💰 **Costo-efectivo**: Uso de modelos preentrenados
+- **Deployment fácil**: Un comando para ejecutar la demo
+- **Mobile-ready**: Exportación a formatos optimizados
+- **Costo-efectivo**: Uso de modelos preentrenados
 
 **2. Escalabilidad Técnica**  
-- 🔄 **Configuración externa**: Fácil experimentación
-- 🧩 **Arquitectura modular**: Componentes intercambiables
-- 📈 **Performance tracking**: Métricas y logging detallado
+- **Configuración externa**: Fácil experimentación
+- **Arquitectura modular**: Componentes intercambiables
+- **Performance tracking**: Métricas y logging detallado
 
 **3. Calidad Empresarial**
-- ✅ **Testing automatizado**: Garantía de calidad
-- 📚 **Documentación completa**: Facilitación de mantenimiento
-- 🏗️ **Metodología probada**: CRISP-DM + principios ágiles
+- **Testing automatizado**: Garantía de calidad
+- **Documentación completa**: Facilitación de mantenimiento
+- **Metodología probada**: CRISP-DM + principios ágiles
 
 ---
 
-## 🎯 **LECCIONES APRENDIDAS Y METODOLOGÍA ÁGIL**
+## **LECCIONES APRENDIDAS Y METODOLOGÍA ÁGIL**
 
 ### **Aplicación Exitosa de Principios Ágiles**
 
 **1. Iteración Corta y Feedback Continuo**
-- ✅ Sprints de 1 semana permitieron ajustes rápidos
-- ✅ Testing continuo detectó problemas temprano
-- ✅ Demo funcional desde la semana 2
+- Sprints de 1 semana permitieron ajustes rápidos
+- Testing continuo detectó problemas temprano
+- Demo funcional desde la semana 2
 
 **2. Colaboración y Comunicación**
-- ✅ Código modular facilitó trabajo en paralelo
-- ✅ Configuraciones externalizadas redujeron conflictos
-- ✅ Documentación clara mejoró la colaboración
+- Código modular facilitó trabajo en paralelo
+- Configuraciones externalizadas redujeron conflictos
+- Documentación clara mejoró la colaboración
 
 **3. Adaptabilidad al Cambio**
-- ✅ Cambio de Gradio a Streamlit (mejor UX)
-- ✅ Arquitectura flexible permitió experimentación
-- ✅ Testing robusto facilitó refactoring
+- Cambio de Gradio a Streamlit (mejor UX)
+- Arquitectura flexible permitió experimentación
+- Testing robusto facilitó refactoring
 
 **4. Entrega de Valor Continuo**
-- ✅ Cada sprint produjo componentes funcionales
-- ✅ Pipeline incremental desde datos hasta deploy
-- ✅ Demo lista para presentación desde semana 3
+- Cada sprint produjo componentes funcionales
+- Pipeline incremental desde datos hasta deploy
+- Demo lista para presentación desde semana 3
 
 ### **Impacto en el Sector Agrícola**
-- 🌱 **Democratización**: Herramientas IA accesibles para pequeños productores
-- ⚡ **Detección temprana**: Prevención de pérdidas de cultivos
-- 📱 **Tecnología móvil**: Diagnóstico en campo sin equipos especializados
+- **Democratización**: Herramientas IA accesibles para pequeños productores
+- **Detección temprana**: Prevención de pérdidas de cultivos
+- **Tecnología móvil**: Diagnóstico en campo sin equipos especializados
 
 ---
 
-## 📈 **PRÓXIMOS PASOS**
+## **PRÓXIMOS PASOS**
 
 ### **Mejoras Técnicas Propuestas**
 1. **Optimización móvil**: Cuantización y pruning del modelo
@@ -513,11 +513,11 @@ detector_enfermedades_cultivo/
 Este proyecto demuestra la **aplicación exitosa de metodología ágil** en el desarrollo de un sistema completo de ML, desde la investigación hasta el despliegue. 
 
 **Factores Clave del Éxito:**
-- ✅ **Metodología CRISP-DM** adaptada con sprints ágiles
-- ✅ **Arquitectura modular** que facilita desarrollo paralelo  
-- ✅ **Testing continuo** que garantiza calidad
-- ✅ **Documentación completa** que facilita mantenimiento
-- ✅ **Demo funcional** que demuestra valor real
+- **Metodología CRISP-DM** adaptada con sprints ágiles
+- **Arquitectura modular** que facilita desarrollo paralelo  
+- **Testing continuo** que garantiza calidad
+- **Documentación completa** que facilita mantenimiento
+- **Demo funcional** que demuestra valor real
 
 El resultado es una **herramienta accesible y efectiva** que puede impactar positivamente la agricultura de precisión, demostrando que la aplicación correcta de metodologías ágiles en proyectos de IA puede generar soluciones robustas y escalables.
 
