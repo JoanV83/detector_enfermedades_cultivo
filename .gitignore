@@ -26,16 +26,17 @@ build/
 # =========================
 # Datos y salidas grandes
 # =========================
-data/
-runs/
-checkpoints/
-artifacts/
+/data/                 
+/runs/
+/checkpoints/
+/artifacts/
 notebooks/*.ckpt
 notebooks/*.pt
 notebooks/*.bin
 *.onnx
 *.pt
 *.bin
+!src/plant_disease/data/
 
 # =========================
 # Hugging Face / Torch caches (si aparecen dentro del repo)
