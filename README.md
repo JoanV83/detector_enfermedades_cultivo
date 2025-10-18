@@ -12,6 +12,7 @@ Incluye entrenamiento configurable, inferencia por CLI y **Streamlit**, exportac
 - [Características](#características)
 - [Requisitos](#requisitos)
 - [Instalación](#instalación)
+- [Docker](#docker)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Dataset](#dataset)
 - [Entrenamiento](#entrenamiento)
@@ -50,7 +51,35 @@ también en `requirements.txt`.
 
 ## Instalación
 
-### Opción A · uv (recomendada)
+### Opción A · Docker (recomendada para producción)
+
+**Usando Docker Compose (más fácil)**
+
+```bash
+# Ejecutar la aplicación Streamlit
+docker-compose up plant-disease-app
+
+# Entrenar el modelo
+docker-compose --profile training up plant-disease-training
+
+# Ejecutar inferencia
+docker-compose --profile inference run plant-disease-inference python -m plant_disease.inference.predict --image path/to/image.jpg
+```
+
+**Usando scripts de Docker**
+
+```bash
+# Ejecutar aplicación Streamlit
+./docker_scripts/run_streamlit.sh
+
+# Entrenar modelo
+./docker_scripts/run_training.sh [config_file]
+
+# Inferencia en una imagen
+./docker_scripts/run_inference.sh path/to/image.jpg [model_dir] [topk]
+```
+
+### Opción B · uv (recomendada para desarrollo)
 
 **Windows (PowerShell)**
 
@@ -73,13 +102,55 @@ uv pip install -e .
 uv pip install -e ".[dev]"  # opcional
 ```
 
-### Opción B · venv + pip estándar
+### Opción C · venv + pip estándar
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate     # Windows: .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
+
+---
+
+## Docker
+
+La aplicación está completamente dockerizada para facilitar el despliegue y la reproducción del entorno.
+
+### Archivos Docker incluidos
+
+- `Dockerfile`: Imagen base con Python 3.10 y todas las dependencias
+- `docker-compose.yml`: Configuración para ejecutar diferentes servicios
+- `.dockerignore`: Exclusión de archivos innecesarios del contexto de construcción
+- `docker_scripts/`: Scripts bash para facilitar el uso
+
+### Uso rápido con Docker
+
+**1. Aplicación Streamlit**
+```bash
+docker-compose up plant-disease-app
+# o usar el script
+./docker_scripts/run_streamlit.sh
+```
+Disponible en http://localhost:8501
+
+**2. Entrenamiento**
+```bash
+docker-compose --profile training up plant-disease-training
+# o usar el script con configuración personalizada
+./docker_scripts/run_training.sh configs/mi_config.yaml
+```
+
+**3. Inferencia**
+```bash
+./docker_scripts/run_inference.sh data/mi_imagen.jpg runs/vit-gvj/final 5
+```
+
+### Ventajas del uso con Docker
+
+- **Consistencia**: Mismo entorno en desarrollo, testing y producción
+- **Aislamiento**: No afecta el sistema host
+- **Portabilidad**: Ejecuta en cualquier sistema con Docker
+- **Persistencia**: Los modelos y datos se mantienen con volúmenes montados
 
 ---
 

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  plant-disease-app:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      # Mount data directories to persist models and outputs
+      - ./checkpoints:/app/checkpoints
+      - ./runs:/app/runs
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data
+      # Mount configs for easy editing
+      - ./configs:/app/configs
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - plant-disease-network
+    restart: unless-stopped
+
+  # Training service (can be run separately)
+  plant-disease-training:
+    build: .
+    volumes:
+      - ./checkpoints:/app/checkpoints
+      - ./runs:/app/runs
+      - ./configs:/app/configs
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - plant-disease-network
+    command: ["python", "-m", "plant_disease.training.train", "--config", "configs/train_vit_gvj.yaml"]
+    profiles: ["training"]
+
+  # Inference service (can be run separately)  
+  plant-disease-inference:
+    build: .
+    volumes:
+      - ./runs:/app/runs
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - plant-disease-network
+    command: ["python", "-m", "plant_disease.inference.predict", "--help"]
+    profiles: ["inference"]
+
+networks:
+  plant-disease-network:
+    driver: bridge

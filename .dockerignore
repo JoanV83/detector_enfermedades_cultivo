@@ -1,0 +1,62 @@
+# Git
+.git
+.gitignore
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+!README.md
+
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Model artifacts (will be mounted as volumes)
+checkpoints/
+runs/
+artifacts/
+*.onnx
+*.ts
+
+# Data directories (will be mounted as volumes)
+data/
+datasets/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+.cache/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# UV lock file (large)
+uv.lock
