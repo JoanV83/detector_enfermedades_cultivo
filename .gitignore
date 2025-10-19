@@ -58,3 +58,18 @@ notebooks/*.bin
 Thumbs.db
 .vscode/
 .idea/
+# =========================
+# Docker / despliegue
+# =========================
+# Ignorar archivos de construcción de Docker que no deben ir al repo
+*.log
+*.pid
+docker-compose.override.yml
+.env.production
+.env.local
+# Carpeta de volúmenes temporales
+volumes/
+# Cache de Docker
+.docker/
+# Archivos de salida de contenedores
+*.bak
