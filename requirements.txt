@@ -1,19 +1,30 @@
-torch>=2.2.0
-torchvision>=0.17.0
+# --- PyTorch CPU wheels (sin CUDA) ---
+torch==2.3.1+cpu
+torchvision==0.18.1+cpu
+torchaudio==2.3.1+cpu
+-f https://download.pytorch.org/whl/torch_stable.html
+
+# --- NLP / visión ---
 transformers>=4.43.0
 datasets>=2.19.0
 evaluate>=0.4.0
 scikit-learn>=1.4.0
+
+# --- Utilidades ---
 numpy>=1.26.0
 pandas>=2.2.0
 pyyaml>=6.0.1
 tqdm>=4.66.0
 matplotlib>=3.8.0
+
+# --- ONNX / runtime CPU ---
 onnx>=1.16.0
-onnxruntime>=1.18.0; platform_system != 'Darwin'
+onnxruntime>=1.18.0
+
+# --- App ---
 streamlit>=1.36.0
 
-# Dev
+# --- Dev (puedes moverlos a dev-requirements si quieres) ---
 pytest>=8.0.0
 black>=24.0.0
 ruff>=0.6.0
