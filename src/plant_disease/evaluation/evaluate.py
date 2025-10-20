@@ -28,12 +28,12 @@ import argparse
 import json
 import os
 from dataclasses import dataclass
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any
 
 import numpy as np
 import torch
+from datasets import ClassLabel, Dataset, load_dataset
 from PIL import Image
-from datasets import Dataset, load_dataset, ClassLabel
 from torch.utils.data import DataLoader
 from transformers import AutoImageProcessor, ViTForImageClassification
 
@@ -50,7 +50,7 @@ def ensure_dir(path: str) -> None:
         os.makedirs(path, exist_ok=True)
 
 
-def _maybe_load_class_names_from_model(model_dir: str) -> Optional[List[str]]:
+def _maybe_load_class_names_from_model(model_dir: str) -> list[str] | None:
     """Intenta cargar nombres de clases desde el directorio del modelo.
 
     Busca `class_names.json` o `labels.json`. Si no existen, retorna None.
@@ -58,12 +58,12 @@ def _maybe_load_class_names_from_model(model_dir: str) -> Optional[List[str]]:
     for fname in ("class_names.json", "labels.json"):
         fpath = os.path.join(model_dir, fname)
         if os.path.exists(fpath):
-            with open(fpath, "r", encoding="utf-8") as f:
+            with open(fpath, encoding="utf-8") as f:
                 return json.load(f)
     return None
 
 
-def _load_class_names_from_hub(hf_path: str, split: str) -> List[str]:
+def _load_class_names_from_hub(hf_path: str, split: str) -> list[str]:
     """Obtiene nombres de clases desde el dataset de Hugging Face."""
     raw = load_dataset(hf_path)
     split_name = split if split in raw else list(raw.keys())[0]
@@ -81,7 +81,7 @@ def _load_split(
     split: str,
     image_column: str = "image",
     label_column: str = "label",
-    cache_dir: Optional[str] = None,
+    cache_dir: str | None = None,
 ) -> Dataset:
     """Carga un split del dataset y normaliza columnas a `image` y `label`."""
     dset = load_dataset(hf_path, split=split, cache_dir=cache_dir)
@@ -91,7 +91,7 @@ def _load_split(
     if not isinstance(dset.features.get(image_column), HFImage):
         dset = dset.cast_column(image_column, HFImage())
 
-    rename: Dict[str, str] = {}
+    rename: dict[str, str] = {}
     if image_column != "image":
         rename[image_column] = "image"
     if label_column != "label":
@@ -113,11 +113,12 @@ def _load_split(
 @dataclass
 class ViTCollator:
     """Convierte ejemplos del dataset en tensores listos para ViT."""
+
     processor: AutoImageProcessor
 
-    def __call__(self, batch: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
-        images: List[Image.Image] = []
-        labels: List[int] = []
+    def __call__(self, batch: list[dict[str, Any]]) -> dict[str, torch.Tensor]:
+        images: list[Image.Image] = []
+        labels: list[int] = []
 
         for item in batch:
             img = item["image"]
@@ -141,7 +142,7 @@ def evaluate(
     model: ViTForImageClassification,
     loader: DataLoader,
     device: torch.device,
-) -> Tuple[float, float, np.ndarray, np.ndarray]:
+) -> tuple[float, float, np.ndarray, np.ndarray]:
     """Evalúa el modelo en un DataLoader.
 
     Retorna:
@@ -152,8 +153,8 @@ def evaluate(
     correct = 0
     seen = 0
 
-    all_true: List[int] = []
-    all_pred: List[int] = []
+    all_true: list[int] = []
+    all_pred: list[int] = []
 
     for batch in loader:
         batch = {k: v.to(device, non_blocking=True) for k, v in batch.items()}
@@ -257,14 +258,17 @@ def main() -> None:
     loss, acc, y_true, y_pred = evaluate(model, loader, device)
 
     # Métricas adicionales con sklearn (si está disponible)
-    metrics: Dict[str, Any] = {
+    metrics: dict[str, Any] = {
         "loss": float(loss),
         "accuracy": float(acc),
         "num_samples": int(len(y_true)),
     }
 
     try:
-        from sklearn.metrics import classification_report, confusion_matrix  # type: ignore
+        from sklearn.metrics import (  # type: ignore
+            classification_report,
+            confusion_matrix,
+        )
 
         report = classification_report(
             y_true,

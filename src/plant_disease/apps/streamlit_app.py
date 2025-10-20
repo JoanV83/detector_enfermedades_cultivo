@@ -8,13 +8,12 @@
 from __future__ import annotations
 
 from io import BytesIO
-from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 import streamlit as st
-from PIL import Image
 import torch
+from PIL import Image
 from transformers import AutoImageProcessor, ViTForImageClassification
 
 from plant_disease.inference.predict import DEFAULT_MODEL_DIR, load_model
@@ -27,10 +26,10 @@ def _predict_pil(
     img: Image.Image,
     model: ViTForImageClassification,
     processor: AutoImageProcessor,
-    class_names: List[str],
+    class_names: list[str],
     device: torch.device,
     topk: int = 5,
-) -> List[Tuple[str, float]]:
+) -> list[tuple[str, float]]:
     """Predice Top-K clases a partir de una imagen PIL.
 
     Args:
@@ -66,9 +65,7 @@ def _predict_pil(
 
 
 # --- Panel lateral ---
-model_dir = st.sidebar.text_input(
-    "Directorio del modelo", value=DEFAULT_MODEL_DIR
-)
+model_dir = st.sidebar.text_input("Directorio del modelo", value=DEFAULT_MODEL_DIR)
 topk = st.sidebar.slider("Top-K", min_value=1, max_value=10, value=5)
 
 
@@ -95,9 +92,7 @@ except Exception as exc:
     st.stop()
 
 # Cargador de archivos
-uploaded = st.file_uploader(
-    "Sube una imagen de hoja", type=["jpg", "jpeg", "png"]
-)
+uploaded = st.file_uploader("Sube una imagen de hoja", type=["jpg", "jpeg", "png"])
 
 if uploaded:
     # Mostrar imagen (sin warning deprecado)
@@ -107,9 +102,7 @@ if uploaded:
 
     # Predicción
     with st.spinner("Prediciendo..."):
-        results = _predict_pil(
-            image, model, processor, class_names, device, topk=topk
-        )
+        results = _predict_pil(image, model, processor, class_names, device, topk=topk)
 
     # Destacar Top-1
     top1_label, top1_prob = results[0]

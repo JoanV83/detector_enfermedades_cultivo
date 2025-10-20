@@ -22,9 +22,9 @@ def test_version_string() -> None:
         import plant_disease as pkg
 
         ver = getattr(pkg, "__version__", None)
-        assert isinstance(ver, str) and ver, (
-            "plant_disease.__version__ debe ser una cadena no vacía."
-        )
+        assert (
+            isinstance(ver, str) and ver
+        ), "plant_disease.__version__ debe ser una cadena no vacía."
     except Exception:
         # Fallback mientras se agrega __version__ en __init__.py
         assert isinstance("0.1.0", str)

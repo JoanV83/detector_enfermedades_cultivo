@@ -19,7 +19,8 @@ import json
 from typing import Any
 
 import numpy as np
-from datasets import ClassLabel, Dataset, DatasetDict, Features, Image as HFImage
+from datasets import ClassLabel, Dataset, DatasetDict, Features
+from datasets import Image as HFImage
 
 from plant_disease.inference.predict import (
     _load_class_names,
@@ -55,6 +56,7 @@ def test_load_class_names_prefers_labels_json(tmp_path):
 
 def test_load_class_names_from_hub_with_classlabel(monkeypatch):
     """Hace fallback a ``ClassLabel`` del dataset cuando no hay labels.json."""
+
     def _fake_load_dataset(_: str, **__: Any) -> DatasetDict:
         return _hub_like_dataset_with_classlabel()
 

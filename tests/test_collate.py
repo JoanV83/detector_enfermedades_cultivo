@@ -8,15 +8,13 @@ Estas pruebas validan que:
 
 from __future__ import annotations
 
-from typing import List
-
 from PIL import Image
 from transformers import AutoImageProcessor
 
 from plant_disease.training.train import ViTCollator
 
 
-def _make_dummy_batch(n: int = 1) -> List[dict]:
+def _make_dummy_batch(n: int = 1) -> list[dict]:
     """Crea un batch sintético de `n` imágenes 224x224 RGB con etiqueta 0."""
     img = Image.new("RGB", (224, 224), (255, 255, 255))
     return [{"image": img, "label": 0} for _ in range(n)]

@@ -15,21 +15,20 @@ construye un ``DatasetDict`` mínimo en memoria.
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 import pytest
-from PIL import Image
-from datasets import ClassLabel, Dataset, DatasetDict, Features
+from datasets import ClassLabel, Dataset, DatasetDict, Features, Value
 from datasets import Image as HFImage
-from datasets import Value
+from PIL import Image
 
 from plant_disease.data.datasets import load_generic_from_hub
-
 
 # ---------------------------------------------------------------------------
 # Helpers para construir splits artificiales
 # ---------------------------------------------------------------------------
+
 
 def _tiny_split_with_int_labels() -> Dataset:
     """Devuelve un split con imágenes PIL y etiquetas enteras 0/1.
@@ -71,6 +70,7 @@ def _tiny_split_with_classlabel() -> Dataset:
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize(
     "builder, expected_names",

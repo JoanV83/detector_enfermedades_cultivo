@@ -9,19 +9,18 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from typing import List, Tuple
 
 import numpy as np
 import torch
-from PIL import Image
 from datasets import ClassLabel, load_dataset
+from PIL import Image
 from transformers import AutoImageProcessor, ViTForImageClassification
 
 DEFAULT_MODEL_DIR = "runs/vit-gvj/final"
 DEFAULT_DATASET = "GVJahnavi/PlantVillage_dataset"
 
 
-def _load_class_names_from_hub(hf_path: str = DEFAULT_DATASET) -> List[str]:
+def _load_class_names_from_hub(hf_path: str = DEFAULT_DATASET) -> list[str]:
     """Obtiene nombres de clases desde el dataset del Hub."""
     raw = load_dataset(hf_path)
     split = "train" if "train" in raw else list(raw.keys())[0]
@@ -34,11 +33,11 @@ def _load_class_names_from_hub(hf_path: str = DEFAULT_DATASET) -> List[str]:
     return [f"class_{i}" for i in range(n)]
 
 
-def _load_class_names(model_dir: str) -> List[str]:
+def _load_class_names(model_dir: str) -> list[str]:
     """Lee ``labels.json`` del directorio del modelo o cae al Hub."""
     labels_json = os.path.join(model_dir, "labels.json")
     if os.path.exists(labels_json):
-        with open(labels_json, "r", encoding="utf-8") as f:
+        with open(labels_json, encoding="utf-8") as f:
             return json.load(f)
     return _load_class_names_from_hub()
 
@@ -79,7 +78,7 @@ def predict(
     image_path: str,
     model_dir: str = DEFAULT_MODEL_DIR,
     topk: int = 5,
-) -> List[Tuple[str, float]]:
+) -> list[tuple[str, float]]:
     """Predice el top-k de clases para una imagen.
 
     Args:

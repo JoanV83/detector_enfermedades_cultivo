@@ -18,13 +18,13 @@ import json
 import os
 import random
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 import torch
 import yaml
-from PIL import Image
 from datasets import Dataset
+from PIL import Image
 from torch.utils.data import DataLoader
 from transformers import AutoImageProcessor
 
@@ -52,7 +52,7 @@ def ensure_dir(path: str) -> None:
         os.makedirs(path, exist_ok=True)
 
 
-def maybe_slice(dset: Dataset, n: Optional[int]) -> Dataset:
+def maybe_slice(dset: Dataset, n: int | None) -> Dataset:
     """Devuelve un subconjunto de tamaño ``n`` si se indica."""
     if not n:
         return dset
@@ -79,9 +79,9 @@ class ViTCollator:
 
     processor: AutoImageProcessor
 
-    def __call__(self, batch: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
-        images: List[Image.Image] = []
-        labels: List[int] = []
+    def __call__(self, batch: list[dict[str, Any]]) -> dict[str, torch.Tensor]:
+        images: list[Image.Image] = []
+        labels: list[int] = []
         for item in batch:
             img = item["image"]
             if isinstance(img, Image.Image):
@@ -97,9 +97,9 @@ class ViTCollator:
 
 
 def collate_fn(
-    batch: List[Dict[str, Any]],
-    processor: Optional[AutoImageProcessor] = None,
-) -> Dict[str, torch.Tensor]:
+    batch: list[dict[str, Any]],
+    processor: AutoImageProcessor | None = None,
+) -> dict[str, torch.Tensor]:
     """Atajo compatible con tests para crear batches.
 
     Args:
@@ -190,7 +190,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    with open(args.config, "r", encoding="utf-8") as f:
+    with open(args.config, encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
 
     set_seed(int(cfg["train"].get("seed", 42)))

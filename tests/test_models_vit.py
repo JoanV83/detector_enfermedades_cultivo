@@ -65,6 +65,7 @@ class _DummyHFModel(nn.Module):
 
 def test_vit_classifier_forward(monkeypatch):
     """El wrapper debe crear modelo y propagar ``pixel_values`` correctamente."""
+
     def _fake_from_pretrained(model_name: str, num_labels: int, **_: Any):
         return _DummyHFModel(num_labels)
 

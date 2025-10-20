@@ -185,7 +185,9 @@ def load_generic_from_hub(
     out: Dict[str, Dataset] = {}
     for k, s in present.items():
         d = raw[s]
-        d = _rename_and_clean_columns(d, image_column=image_column, label_column=label_column)
+        d = _rename_and_clean_columns(
+            d, image_column=image_column, label_column=label_column
+        )
         out[k] = d
 
     # Crear validación si no existe

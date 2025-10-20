@@ -65,4 +65,3 @@ class VitClassifier(nn.Module):
             ``logits`` (y ``loss`` si se pasaron ``labels``).
         """
         return self.model(pixel_values=pixel_values, labels=labels)
-

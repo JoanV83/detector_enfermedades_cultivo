@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import os
 import tempfile
-from typing import List, Tuple
 
 import numpy as np
 import pytest
@@ -37,9 +36,7 @@ def test_predict_dummy() -> None:
         img_path = os.path.join(tmpdir, "dummy.png")
         img.save(img_path)
 
-        preds: List[Tuple[str, float]] = predict(
-            img_path, model_dir=MODEL_DIR, topk=3
-        )
+        preds: list[tuple[str, float]] = predict(img_path, model_dir=MODEL_DIR, topk=3)
 
         assert isinstance(preds, list)
         assert len(preds) == 3
