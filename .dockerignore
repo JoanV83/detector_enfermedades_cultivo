@@ -58,5 +58,5 @@ Dockerfile
 docker-compose.yml
 .dockerignore
 
-# UV lock file (large)
-uv.lock
+# UV lock file - keep for reproducible builds
+# uv.lock
