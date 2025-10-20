@@ -1,18 +1,25 @@
 # Plant Disease Detection (ViT)
 
+[![Pipeline Status](https://gitlab.com/mash4403/detector_enfermedades_cultivo/badges/main/pipeline.svg)](https://gitlab.com/mash4403/detector_enfermedades_cultivo/-/pipelines)
+[![Docker Build](https://img.shields.io/badge/Docker-Build%20Ready-blue?logo=docker)](https://hub.docker.com)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org)
+[![uv](https://img.shields.io/badge/uv-package%20manager-orange)](https://docs.astral.sh/uv/)
+
 Clasificador de enfermedades en cultivos basado en **Vision Transformer (ViT)**
 entrenado con el conjunto **PlantVillage** (`GVJahnavi/PlantVillage_dataset`).
 Incluye entrenamiento configurable, inferencia por CLI y **Streamlit**, exportación
-(ONNX/TorchScript) y una batería mínima de pruebas con **pytest**.
+(ONNX/TorchScript), **Docker completo** y **CI/CD con GitLab**.
 
 ---
 
 ## Contenidos
 
 - [Características](#características)
+- [Inicio rápido](#inicio-rápido)
 - [Requisitos](#requisitos)
 - [Instalación](#instalación)
 - [Docker](#docker)
+- [CI/CD con GitLab](#cicd-con-gitlab)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Dataset](#dataset)
 - [Entrenamiento](#entrenamiento)
@@ -28,13 +35,55 @@ Incluye entrenamiento configurable, inferencia por CLI y **Streamlit**, exportac
 
 ## Características
 
-- Entrenamiento controlado por **YAML** (ruta de salida, epochs, LR, etc.).
-- Carga robusta del dataset desde Hugging Face con normalización de columnas.
-- Inferencia en:
-  - **CLI** con `predict.py`.
-  - **Streamlit** en `src/plant_disease/apps/streamlit_app.py`.
-- Exportación a **ONNX** y **TorchScript** (scripts en `scripts/`).
-- Suite básica de **pytest** y herramientas de estilo (`ruff`, `black`).
+**Machine Learning**
+- Entrenamiento controlado por **YAML** (ruta de salida, epochs, LR, etc.)
+- Modelo **Vision Transformer (ViT)** preentrenado con fine-tuning
+- Carga robusta del dataset desde Hugging Face con normalización de columnas
+- Exportación a **ONNX** y **TorchScript** para producción
+
+**Aplicaciones**
+- **CLI** para inferencia por línea de comandos
+- **Streamlit** app interactiva con UI web
+- **Docker** completamente containerizado
+
+**DevOps & Calidad**
+- **CI/CD Pipeline** con GitLab (tests, build, deploy)
+- **uv** como gestor de dependencias rápido
+- Suite completa de **pytest** con 11+ tests
+- Calidad de código con **ruff** + **black** + **mypy**
+- **Healthchecks** y usuario no-root en Docker
+
+---
+
+## Inicio rápido
+
+### Docker (Recomendado)
+
+```bash
+# 1. Clonar el repositorio
+git clone https://gitlab.com/mash4403/detector_enfermedades_cultivo.git
+cd detector_enfermedades_cultivo
+
+# 2. Ejecutar la aplicación Streamlit
+docker compose up -d plant-disease-app
+
+# 3. Abrir en el navegador
+open http://localhost:8501
+```
+
+### Local con uv
+
+```bash
+# 1. Instalar dependencias
+uv venv && source .venv/bin/activate
+uv pip install -e ".[dev]"
+
+# 2. Ejecutar tests
+pytest tests/ -v
+
+# 3. Lanzar Streamlit
+streamlit run src/plant_disease/apps/streamlit_app.py
+```
 
 ---
 
@@ -154,10 +203,67 @@ docker-compose --profile training up plant-disease-training
 
 ---
 
+## CI/CD con GitLab
+
+El proyecto incluye un pipeline completo de **Integración y Despliegue Continuo** con GitLab.
+
+### Pipeline Stages
+
+**1. Test**
+- Ejecuta `pytest` con todos los tests (11+ tests)
+- Verifica calidad de código con `ruff` y `black`
+- Usa `uv` para instalación rápida de dependencias
+
+**2. Build**
+- Construye imagen Docker optimizada
+- Guarda artefacto de imagen para deploy
+- Verifica que el contenedor se construye correctamente
+
+**3. Deploy**
+- Deploy manual a staging/producción
+- Ejecuta aplicación Streamlit en contenedor
+- Incluye healthchecks y monitoreo
+
+### Configuración
+
+```yaml
+# .gitlab-ci.yml
+stages:
+  - test
+  - build  
+  - deploy
+
+variables:
+  UV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/uv"
+```
+
+### Monitoreo
+
+- **Pipeline Status**: [Ver pipelines](https://gitlab.com/mash4403/detector_enfermedades_cultivo/-/pipelines)
+- **Badges**: Estado del pipeline en tiempo real
+- **Artifacts**: Preserva imágenes Docker y reportes de tests
+
+### Ventajas
+
+- **Automatización completa**: Push → Test → Build → Deploy
+- **Calidad garantizada**: No deploy sin pasar tests
+- **Reprodución**: Mismo entorno en CI y producción
+- **Rapidez**: Cache de `uv` acelera instalaciones
+
+---
+
 ## Estructura del proyecto
 
 ```
-proyecto_final/
+detector_enfermedades_cultivo/
+├── .gitlab-ci.yml           # Pipeline CI/CD de GitLab
+├── Dockerfile               # Imagen Docker con uv y Python 3.10
+├── docker-compose.yml       # Orquestación de servicios
+├── .dockerignore           # Exclusiones para build Docker
+├── docker_scripts/         # Scripts de conveniencia
+│   ├── run_streamlit.sh
+│   ├── run_training.sh
+│   └── run_inference.sh
 ├── configs/
 │   └── train_vit_gvj.yaml
 ├── scripts/
@@ -176,15 +282,19 @@ proyecto_final/
 │       │   └── vit.py
 │       └── training/
 │           └── train.py
-├── tests/
+├── tests/                  # 11+ tests automatizados
 │   ├── test_collate.py
+│   ├── test_datasets.py
 │   ├── test_imports.py
-│   └── test_inference.py
-├── artifacts/           # onnx/ts (salidas)
-├── checkpoints/         # checkpoints por época + best
-├── runs/                # modelo final (save_pretrained)
-├── requirements.txt
-├── pyproject.toml
+│   ├── test_inference.py
+│   └── ...
+├── artifacts/              # salidas ONNX/TorchScript
+├── checkpoints/            # checkpoints de entrenamiento
+├── runs/                   # modelos finales
+├── data/                   # datos de prueba (montado en Docker)
+├── requirements.txt        # dependencias Python
+├── pyproject.toml          # configuración del paquete
+├── uv.lock                 # lock file para reprodución
 └── README.md
 ```
 
