@@ -1,51 +1,59 @@
-version: '3.8'
+version: "3.8"
 
 services:
   plant-disease-app:
     build: .
+    image: detector_enfermedades:cpu
+    container_name: plant-disease
     ports:
       - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HF_HUB_DISABLE_TELEMETRY=1
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
     volumes:
-      # Mount data directories to persist models and outputs
+      # En PC (Windows): deja bind-mounts
       - ./checkpoints:/app/checkpoints
       - ./runs:/app/runs
       - ./artifacts:/app/artifacts
       - ./data:/app/data
-      # Mount configs for easy editing
       - ./configs:/app/configs
-    environment:
-      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
     networks:
       - plant-disease-network
-    restart: unless-stopped
 
-  # Training service (can be run separately)
   plant-disease-training:
-    build: .
+    image: detector_enfermedades:cpu
+    profiles: ["training"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HF_HUB_DISABLE_TELEMETRY=1
     volumes:
       - ./checkpoints:/app/checkpoints
       - ./runs:/app/runs
       - ./configs:/app/configs
       - ./data:/app/data
-    environment:
-      - PYTHONUNBUFFERED=1
+    command: ["python", "-m", "plant_disease.training.train", "--config", "configs/train_vit_gvj.yaml"]
     networks:
       - plant-disease-network
-    command: ["python", "-m", "plant_disease.training.train", "--config", "configs/train_vit_gvj.yaml"]
-    profiles: ["training"]
 
-  # Inference service (can be run separately)  
   plant-disease-inference:
-    build: .
+    image: detector_enfermedades:cpu
+    profiles: ["inference"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HF_HUB_DISABLE_TELEMETRY=1
     volumes:
       - ./runs:/app/runs
       - ./data:/app/data
-    environment:
-      - PYTHONUNBUFFERED=1
+    command: ["python", "-m", "plant_disease.inference.predict", "--help"]
     networks:
       - plant-disease-network
-    command: ["python", "-m", "plant_disease.inference.predict", "--help"]
-    profiles: ["inference"]
 
 networks:
   plant-disease-network:
