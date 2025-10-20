@@ -1,0 +1,170 @@
+# GitLab CI/CD Pipeline for Plant Disease Detector
+stages:
+  - build
+  - test
+  - lint
+  - security
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  IMAGE_NAME: "plant-disease-detector"
+  IMAGE_TAG: "$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA"
+  UV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/uv"
+
+# Build Docker image
+build:
+  stage: build
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/$IMAGE_NAME:$IMAGE_TAG .
+    - docker build -t $CI_REGISTRY_IMAGE/$IMAGE_NAME:latest .
+    - docker push $CI_REGISTRY_IMAGE/$IMAGE_NAME:$IMAGE_TAG
+    - docker push $CI_REGISTRY_IMAGE/$IMAGE_NAME:latest
+  only:
+    - develop
+    - main
+    - merge_requests
+
+# Run tests
+test:
+  stage: test
+  image: python:3.10
+  before_script:
+    - pip install uv
+    - uv venv
+    - source .venv/bin/activate
+    - uv pip install -e .
+    - uv pip install -e ".[dev]"
+  script:
+    - python -m pytest tests/ -v --tb=short
+  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - htmlcov/
+    expire_in: 1 week
+  dependencies:
+    - build
+  only:
+    - develop
+    - main
+    - merge_requests
+
+# Code quality checks
+lint:
+  stage: lint
+  image: python:3.10
+  before_script:
+    - pip install uv
+    - uv venv
+    - source .venv/bin/activate
+    - uv pip install -e ".[dev]"
+  script:
+    - echo "Running code quality checks..."
+    - ruff check src tests --output-format=gitlab
+    - black --check src tests
+    - mypy src --ignore-missing-imports
+  artifacts:
+    reports:
+      codequality: ruff-report.json
+  dependencies:
+    - build
+  allow_failure: true
+  only:
+    - develop
+    - main
+    - merge_requests
+
+# Security scanning
+security_scan:
+  stage: security
+  image: $CI_REGISTRY_IMAGE/$IMAGE_NAME:$IMAGE_TAG
+  script:
+    - pip install safety bandit
+    - safety check --json --output safety-report.json || true
+    - bandit -r src/ -f json -o bandit-report.json || true
+  artifacts:
+    reports:
+      sast: bandit-report.json
+    paths:
+      - safety-report.json
+      - bandit-report.json
+    expire_in: 1 week
+  dependencies:
+    - build
+  allow_failure: true
+  only:
+    - develop
+    - main
+
+# Deploy to staging
+deploy_staging:
+  stage: deploy
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - echo "Deploying to staging environment..."
+    - docker run -d --name plant-disease-staging -p 8501:8501 $CI_REGISTRY_IMAGE/$IMAGE_NAME:$IMAGE_TAG
+    - echo "Staging deployment available at http://staging-server:8501"
+  environment:
+    name: staging
+    url: http://staging-server:8501
+  dependencies:
+    - build
+  only:
+    - develop
+  when: manual
+
+# Deploy to production
+deploy_production:
+  stage: deploy
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - echo "Deploying to production environment..."
+    - docker run -d --name plant-disease-prod -p 80:8501 $CI_REGISTRY_IMAGE/$IMAGE_NAME:$IMAGE_TAG
+    - echo "Production deployment available at http://production-server"
+  environment:
+    name: production
+    url: http://production-server
+  dependencies:
+    - build
+  only:
+    - main
+  when: manual
+
+# Training job (can be triggered manually)
+train_model:
+  stage: deploy
+  image: $CI_REGISTRY_IMAGE/$IMAGE_NAME:$IMAGE_TAG
+  script:
+    - echo "Starting model training..."
+    - python -m plant_disease.training.train --config configs/train_vit_gvj.yaml
+    - echo "Training completed"
+  artifacts:
+    paths:
+      - checkpoints/
+      - runs/
+    expire_in: 1 month
+  dependencies:
+    - build
+  when: manual
+  timeout: 4h
+
+# Cache for faster builds
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - .cache/uv
+    - .venv/

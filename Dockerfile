@@ -18,17 +18,21 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt pyproject.toml ./
+# Install uv
+RUN pip install uv
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy requirements first for better caching
+COPY requirements.txt pyproject.toml uv.lock ./
+
+# Set up virtual environment with uv
+RUN uv venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Install dependencies with uv
+RUN uv pip install -e .
 
 # Copy the entire project
 COPY . .
-
-# Install the package in editable mode
-RUN pip install -e .
 
 # Create necessary directories
 RUN mkdir -p /app/checkpoints /app/runs /app/artifacts /app/data
