@@ -29,11 +29,11 @@ COPY requirements.txt pyproject.toml uv.lock ./
 RUN uv venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Install dependencies with uv
-RUN uv pip install -e .
-
 # Copy the entire project
 COPY . .
+
+# Install the project with all dependencies in editable mode
+RUN uv pip install -e .
 
 # Create necessary directories
 RUN mkdir -p /app/checkpoints /app/runs /app/artifacts /app/data
