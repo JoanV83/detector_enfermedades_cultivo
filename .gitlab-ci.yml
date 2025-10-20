@@ -1,5 +1,5 @@
 # Debug GitLab CI/CD Pipeline
-stages:
+stages:  
   - debug
   - test_simple
 
