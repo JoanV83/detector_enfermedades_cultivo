@@ -36,9 +36,9 @@ build_image:
   stage: build
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
-  image: docker:28.0.0-cli
+  image: docker:24.0.5-cli
   services:
-    - docker:28.0.0-dind
+    - docker:24.0.5-dind
   before_script:
     - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin "$REGISTRY"
   script:
