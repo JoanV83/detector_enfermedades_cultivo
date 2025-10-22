@@ -17,6 +17,7 @@ variables:
 stages:
   - test
   - build
+  - deploy
 
 run_test:
   stage: test
@@ -44,3 +45,41 @@ build_image:
   script:
     - docker build -t "$IMAGE_NAME:$IMAGE_TAG" .
     - docker push "$IMAGE_NAME:$IMAGE_TAG"
+
+deploy_to_digitalocean:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts
+  script:
+    - |
+      ssh $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
+        cd /opt/enfermedades-plantas || mkdir -p /opt/enfermedades-plantas && cd /opt/enfermedades-plantas
+        
+        # Clonar o actualizar repositorio
+        if [ -d ".git" ]; then
+          git pull origin main
+        else
+          git clone https://gitlab.com/mash4403/detector_enfermedades_cultivo.git .
+        fi
+        
+        # Detener contenedores anteriores
+        docker compose down || true
+        
+        # Iniciar aplicación
+        docker compose up -d plant-disease-app
+        
+        # Verificar estado
+        docker compose ps
+      EOF
+  only:
+    - main
+  when: manual
+  environment:
+    name: production
+    url: http://$DEPLOY_SERVER:8501
