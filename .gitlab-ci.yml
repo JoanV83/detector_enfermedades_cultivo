@@ -1,4 +1,5 @@
 # .gitlab-ci.yml
+# Pipeline CI/CD para detector de enfermedades en cultivos
 
 variables:
   UV_VERSION: "0.5"
