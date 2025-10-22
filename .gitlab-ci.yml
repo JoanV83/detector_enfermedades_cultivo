@@ -1,8 +1,30 @@
+# Debug GitLab CI/CD Pipeline
 stages:  
+  - debug
   - test_simple
 
 variables:
   UV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/uv"
+
+# Debug environment
+debug_env:
+  stage: debug
+  image: python:3.10
+  script:
+    - echo "=== SYSTEM INFO ==="
+    - python --version
+    - pip --version
+    - pwd
+    - ls -la
+    - echo "=== INSTALL UV ==="
+    - pip install uv
+    - uv --version
+    - echo "=== CHECK FILES ==="
+    - ls -la src/
+    - cat pyproject.toml | head -20
+    - echo "=== END DEBUG ==="
+  only:
+    - main
 
 # Simple test
 test_basic:
