@@ -1,45 +1,45 @@
-# Debug GitLab CI/CD Pipeline
-stages:  
-  - debug
-  - test_simple
+# .gitlab-ci.yml
 
 variables:
-  UV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/uv"
+  UV_VERSION: "0.5"
+  PYTHON_VERSION: "3.10"
+  BASE_LAYER: bookworm-slim
+  UV_LINK_MODE: copy
 
-# Debug environment
-debug_env:
-  stage: debug
-  image: python:3.10
-  script:
-    - echo "=== SYSTEM INFO ==="
-    - python --version
-    - pip --version
-    - pwd
-    - ls -la
-    - echo "=== INSTALL UV ==="
-    - pip install uv
-    - uv --version
-    - echo "=== CHECK FILES ==="
-    - ls -la src/
-    - cat pyproject.toml | head -20
-    - echo "=== END DEBUG ==="
-  only:
-    - main
+  # Para build de imagen (ajusta si quieres)
+  IMAGE_NAME: "$CI_REGISTRY_IMAGE"
+  IMAGE_TAG: "${CI_COMMIT_TAG:-$CI_COMMIT_REF_SLUG}"
+  REGISTRY: "$CI_REGISTRY"
+  REGISTRY_USER: "$CI_REGISTRY_USER"
+  REGISTRY_PASSWORD: "$CI_REGISTRY_PASSWORD"
 
-# Simple test
-test_basic:
-  stage: test_simple
-  image: python:3.10
+stages:
+  - test
+  - build
+
+run_test:
+  stage: test
+  image: "ghcr.io/astral-sh/uv:${UV_VERSION}-python${PYTHON_VERSION}-${BASE_LAYER}"
+  before_script:
+    - apt-get update && apt-get install -y make libgl1-mesa-glx libglib2.0-0
   script:
-    - echo "Installing uv..."
-    - pip install uv
-    - echo "Creating venv..."
-    - uv venv
-    - echo "Activating venv..."
-    - source .venv/bin/activate
-    - echo "Installing package..."
-    - uv pip install -e . || (echo "Install failed, trying with verbose output..." && uv pip install -e . -v)
-    - echo "Running basic import test..."
-    - python -c "import plant_disease; print('Import successful!')"
-  only:
-    - main
+    - make test
+  cache:
+    key:
+      files:
+        - requirements.txt
+    paths:
+      - venv/
+
+build_image:
+  stage: build
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  image: docker:28.0.0-cli
+  services:
+    - docker:28.0.0-dind
+  before_script:
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin "$REGISTRY"
+  script:
+    - docker build -t "$IMAGE_NAME:$IMAGE_TAG" .
+    - docker push "$IMAGE_NAME:$IMAGE_TAG"

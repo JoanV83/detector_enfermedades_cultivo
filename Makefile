@@ -24,10 +24,11 @@ help:
 
 setup:
 	uv --version
-	uv sync --frozen || uv sync
+	uv venv --allow-existing
+	uv pip install -e ".[dev]"
 
 test: setup
-	uv run pytest $(PYTEST_ARGS)
+	.venv/bin/pytest $(PYTEST_ARGS)
 
 lint:
 	uvx ruff check src tests
